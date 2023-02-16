@@ -25,7 +25,7 @@
                 echo 'Điền đầy đủ thông tin';
             }else{
                 $password=md5($password);
-                $query= mysqli_query($connect, "SELECT * FROM `task1` WHERE username='$username' AND password='$password'");
+                $query= mysqli_query($connect, "SELECT * FROM `task1` WHERE username='$username'AND password='$password'");
                 if(mysqli_num_rows($query)!=0){
                     $rows=mysqli_fetch_assoc($query);
                     $_SESSION['id']=$rows['id'];
