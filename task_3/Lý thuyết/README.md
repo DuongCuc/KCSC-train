@@ -5,7 +5,7 @@ Website là một tập hợp nhiều trang web (webpage) bao gồm văn bản, 
 ### Cách thức hoạt động của một website
 1. Người dùng nhập vào thành tìm kiếm của trình duyệt web một địa chỉ (domain name). VD: facebook.com
 2. Trình duyệt gửi yêu cầu đến DNS.
-    DNS phân giải domain name thành IP của web server chứa source code ứng với domain đó. Dễ hiểu hơn là DNS đã lưu lại IP của server từ lúc đăng ký domain , lúc cần thì sẽ đưa ra.
+    DNS phân giải domain name thành IP của web server chứa source code ứng với domain đó. Dễ hiểu hơn là DNS đã lưu lại IP của server từ lúc đăng ký domain, lúc cần thì sẽ đưa ra.
 3. Trình duyệt tiếp tục gửi yêu cầu tới web server thông qua IP đã nhận được.
 4. Khi nhận được yêu cầu, web server sẽ xử lý thông tin và trả về nội dung website được yêu cầu (dưới dạng file bao gồm HTML/CSS, hình ảnh, video…)
 5. Sau khi nhận được tài nguyên từ web server, trình duyệt sẽ render thành giao diện website chúng ta nhìn thấy.
@@ -198,4 +198,4 @@ Là giao thức HTTP bao gồm các cơ chế riêng để xác thực người 
 
 - Basic: cơ chế xác thực đơn giản bằng cách gửi thông tin đăng nhập của người dùng dưới dạng chuỗi được mã hoá Base64 trong phần header của request
 - NTLM: cơ chế challenge-response, sử dụng một phiên bản của giao thức Windows NTLM
-- Digest: là một cơ chế challenge-response, sử dụng MD5 để kiểm tra thông tin đăng nhập của người dùnga
+- Digest: là một cơ chế challenge-response, sử dụng MD5 để kiểm tra thông tin đăng nhập của người dùng
