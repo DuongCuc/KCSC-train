@@ -22,10 +22,10 @@
             $connect=mysqli_connect("localhost","root","","kcsc");
             if(isset($_POST['register'])){
                 if($_POST['username']!='' && $_POST['password']!='' && $_POST['repassword']!=''){
-                    $username=$_POST['username'];
-                    $password=$_POST['password'];
+                    $username=mysqli_real_escape_string($connect, $_POST['username']);
+                    $password=mysqli_real_escape_string($connect, $_POST['password']);
                     $repassword=$_POST['repassword'];
-                    $query= mysqli_query($connect, "SELECT * FROM `task1` WHERE username='$username'");
+                    $query= mysqli_query($connect, "SELECT * FROM `task1` WHERE `username`='$username'");
                     if(mysqli_num_rows($query)!=0){
                         echo 'Tên đăng nhập đã tồn tại.';
                     }else{
@@ -33,7 +33,7 @@
                             echo 'Mật khẩu không trùng khớp.';
                         }else{
                             $password=md5($password);
-                            $sql="INSERT INTO task1 (id, username, password)
+                            $sql="INSERT INTO `task1` (id, username, password)
                                     VALUES (NULL, '$username', '$password')";
                             $query=mysqli_query($connect,$sql);
                             if($query!=0){
