@@ -122,3 +122,55 @@ Tuy nhiên em vẫn không thấy flag.
 
 ### Flag
 picoCTF{th3_c0nsp1r4cy_l1v3s_6edb3f5f}
+___
+# Login
+### Challenge
+Link:https://login.mars.picoctf.net/
+### Solution
+Kiểm tra source code, có dòng:
+```
+return "YWRtaW4" !== t.u ? alert("Incorrect Username") : "cGljb0NURns1M3J2M3JfNTNydjNyXzUzcnYzcl81M3J2M3JfNTNydjNyfQ" !== t.p ? alert("Incorrect Password") : void alert(`Correct Password! Your flag is ${atob(t.p)}.`)
+
+```
+Em thấy có hàm atob(), một hàm giải mã chuỗi được mã hoá dạng Base64. Vì vậy, em đưa `cGljb0NURns1M3J2M3JfNTNydjNyXzUzcnYzcl81M3J2M3JfNTNydjNyfQ` vào Base64 online để giải thì thu được flag.
+
+![](https://i.imgur.com/vspRbB7.png)
+
+### Flag
+picoCTF{53rv3r_53rv3r_53rv3r_53rv3r_53rv3r}
+___
+# Some Assembly Required 1
+### Challenge
+Link: http://mercury.picoctf.net:15472/index.html
+### Solution
+Kiểm tra tất cả các file của source, em tìm được flag.
+
+![](https://i.imgur.com/l16ekQf.png)
+
+### Flag
+picoCTF{c733fda95299a16681f37b3ff09f901c}
+___
+# Some Assembly Required 2
+### Challenge
+Link: http://mercury.picoctf.net:48841/index.html
+### Solution
+Kiểm tra source, em thấy có một đoạn code tương tự flag của bài trước nhưng là ký tự byte.
+
+![](https://i.imgur.com/7YU4LwQ.png)
+
+Vì vậy, em thực phép xor, vét cạn như sau:
+```
+data = b"xakgK\5cNs>j:<?m8>m;>k110<j?=88lj0l11:n;nmu\00\00"
+for j in range(1,17):    
+    flag = ""
+    for i in range(len(data)):
+        flag += chr(data[i] ^ j)
+    print(j, flag)
+```
+Em thu được kết quả như sau:
+
+![](https://i.imgur.com/ZkquJJT.png)
+
+Như vậy, khi xor chuỗi tìm được với 8 thì sẽ thu được flag.
+### Flag
+picoCTF{6b247e06e36c9984b7500db8d992f3fe}
