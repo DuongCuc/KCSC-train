@@ -151,5 +151,8 @@ Em thử thì thấy chuyển đến Webhook thành công nên nhập link trên
 
 Sau đó, ở Webhook, em đã nhận được flag.
 ### Flag
+`rootme{XSS_D0M_BaSed_InTr0}`
+
+
 
 
