@@ -557,7 +557,48 @@ FROM Products;
 > Tìm giá rẻ nhất của các sản phẩm
 ![](https://i.imgur.com/lTLnL8q.png)
 
-
+## COUNT(),AVG(), SUM()
+`COUNT()` trả về số hàng phù hợp
+`AVG()` trả về giá trị trung bình của một cột có giá trị là số
+`SUM()` trả về tổng của một cột có giá trị là số
+Syntax:
+```sql=
+SELECT COUNT(column_name)
+FROM table_name
+WHERE condition;
+```
+```sql=
+SELECT AVG(column_name)
+FROM table_name
+WHERE condition;
+```
+```sql=
+SELECT SUM(column_name)
+FROM table_name
+WHERE condition;
+```
+Ví dụ:
+![](https://i.imgur.com/qULHSK3.png)
+- COUNT()
+    ```sql=
+    SELECT COUNT(ProductID)
+    FROM Products;
+    ```
+    ![](https://i.imgur.com/sehOOb3.png)
+    
+- AVG()
+    ```sql=
+    SELECT AVG(Price)
+    FROM Products;
+    ```
+    ![](https://i.imgur.com/EniKUV9.png)
+    
+- SUM()
+    ```sql=
+    SELECT SUM(Price)
+    FROM Products;
+    ```
+    ![](https://i.imgur.com/hzTEEiI.png)
 
 
 
