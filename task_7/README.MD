@@ -96,7 +96,9 @@ Bây giờ, để lấy dữ liệu từ bảng, em truyền payload như sau:
 
 Em đã có được thông tin người dùng đầu tiên như sau:
 > id: 22
+
 > username: Cuc
+
 > password: cuc
 
 Muốn lấy thông tin những người dùng còn lại, ta làm tương tự như trên và thay bằng `limit 1,1`, `limit 2,1`,...
