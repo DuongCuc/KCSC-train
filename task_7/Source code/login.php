@@ -25,14 +25,13 @@
                 echo 'Điền đầy đủ thông tin';
             }else{
                 $password=md5($password);
-                $query= mysqli_query($connect, "SELECT * FROM `task1` WHERE username='$username'AND password='$password'");
+                $query= mysqli_query($connect, "SELECT * FROM `task7` WHERE username='$username'AND password='$password'");
                 $rows=mysqli_fetch_assoc($query);
                 if($rows!=0){
-                    
+                    echo 'Cuckooo...';
                     $_SESSION['id']=$rows['id'];
                     $_SESSION['username']=$rows['username'];
                     $_SESSION['password']=$rows['password'];
-                    header('location: index.php');
                 }else{
                     echo 'Tên đăng nhập hoặc mật khẩu sai.';
                 }
