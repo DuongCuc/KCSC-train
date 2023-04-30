@@ -24,7 +24,7 @@ Tuy nhiên, người ta có thể bypass client side filter bằng cách tắt J
     * Nếu tất cả các đuôi bạn thử đều đã nằm trong danh sách đen thì có thể check xem bộ lọc có phân biệt chữ hoa chữ thường không. VD: `.Php1`, `.PHP2`,...
     * Chồng extension. VD: `.jpg.php`
 * **Whitelisting Bypass:** Trái ngược với black list, có một số trang web lại yêu cầu bạn bắt buộc phải sử dụng những extension được liệt kê trong white list. Để vượt qua white list, ta có thể sử dụng một số cách sau:
-    * Null Byte Injection: Đây là một kỹ thuật khai thác trong đó sử dụng các ký tự null byte URL-encoded (ví dụ: 00%, hoặc 0x00 trong hex). Phần sau các ký tự này sẽ được hiểu là giá trị null. Ví dụ như tệp `shell.php%00.jpg`, sau khi được upload thành công với `.jpg` thì sẽ được hiểu và thực thi với tên tệp chỉ là `shell.php`. 
+    * Null Byte Injection: Đây là một kỹ thuật khai thác trong đó sử dụng các ký tự null byte URL-encoded (ví dụ: %00, hoặc 0x00 trong hex). Phần sau các ký tự này sẽ được hiểu là giá trị null. Ví dụ như tệp `shell.php%00.jpg`, sau khi được upload thành công với `.jpg` thì sẽ được hiểu và thực thi với tên tệp chỉ là `shell.php`. 
     * Sử dụng Double Extension: `shell.php.jpg`,`shell.php;.jpg`,`shell.php:jpg`, ...
     * Invalid Extension Bypass: Nếu server gặp lỗi này thì khi chúng ta sử dụng extension `.test`, hệ điều hành sẽ không nhận ra . Cho nên hacker có thể tải lên tệp `shell.php.test`, khi đó `shell.php` sẽ được thực thi.
 #### 4.3. Content type
@@ -100,6 +100,24 @@ Lúc đầu, content-type của file `shell.php` là `application/octet-stream`.
 
 `a7n4nizpgQgnPERy89uanf6T4`
 
+### 3. File upload - Null byte
+#### Challenge
+Link: http://challenge01.root-me.org/web-serveur/ch22/?galerie=upload
+#### Statement
+> Your goal is to hack this photo galery by uploading PHP code.
+#### Solution
+Với bài này, nhiệm vụ đơn giản hơn hai bài trước là ta chỉ cần upload file PHP thành công thì sẽ thu được flag. Tuy nhiên, các cách trên đều không có hiệu quả.
+Với tên challenge `Null byte`, em rename file thành `shell.php%00.png` thì đã upload thành công.
+
+![](https://i.imgur.com/m4k3mUS.png)
+
+Quay lại trang `upload`, em chọn vào file đã upload thành công. Lúc này, server sẽ thực thi file đó nhưng vì các ký tự `%00.png` được tính là ký tự `null` nên file được thực thi là `shell.php`. Vậy khi chọn file PHP đã upload, file được thực thi, em nhận được flag.
+
+![](https://i.imgur.com/wfWWLVb.png)
+
+#### Flag
+
+`YPNchi2NmTwygr2dgCCF`
 
 
 
