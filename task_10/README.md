@@ -95,7 +95,7 @@ RFI cho phép tin tặc include và thực thi trên máy chủ mục tiêu mộ
 * PHP Wrappers
     * PHP Filter
     
-    VD: 
+        VD: 
     ```
     http://example.com/index.php?page=php://filter/read=string.rot13/resource=index.php
     http://example.com/index.php?page=php://filter/convert.iconv.utf-8.utf-16/resource=index.php
